@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dk-svc-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dk-svc-user
+  template:
+    metadata:
+      labels:
+        app: dk-svc-user
+    spec:
+      containers:
+      - name: dk-svc-user
+        image: public.ecr.aws/r8o6w0j4/dk-svc-user:latest
+        env: 
+          - name: POSTGRES_HOSTNAME
+            valueFrom:
+              configMapKeyRef: 
+                name: postgres-configmap
+                key: hostname
+          - name: POSTGRES_DATABASE_NAME
+            valueFrom:
+              configMapKeyRef: 
+                name: postgres-configmap
+                key: databasename
+          - name: POSTGRES_USERNAME
+            valueFrom:
+              secretKeyRef: 
+                name: postgres-secret
+                key: username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef: 
+                name: postgres-secret
+                key: password
+          - name: JPA_DDL_AUTO
+            valueFrom:
+              configMapKeyRef:
+                name: svc-general-configmap
+                key: jp-ddl-auto
+          - name: IMG_FILE_SIZE_LIMIT
+            valueFrom:
+              configMapKeyRef:
+                name: svc-general-configmap
+                key: max-image-size
+          - name: DATABASE_DIALECT
+            valueFrom:
+              configMapKeyRef:
+                name: svc-general-configmap
+                key: database-dialect
+          - name: S3_BUCKET_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: aws-configmap
+                key: s3-bucket-name
+          
+        ports:
+        - containerPort: 3005
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: dk-svc-user-service
+spec:
+  selector:
+    app: dk-svc-user
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 3005

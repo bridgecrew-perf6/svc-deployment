@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-configmap
+data:
+  hostname: jdbc:postgresql://shareddb.c86fmxf8bjjo.us-east-1.rds.amazonaws.com
+  databasename: microservice

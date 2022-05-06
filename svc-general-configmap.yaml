@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: svc-general-configmap
+data:
+  jp-ddl-auto: update
+  max-image-size: 20MB
+  max-email-attachment-size: 100MB
+  database-dialect: org.hibernate.dialect.PostgreSQL9Dialect

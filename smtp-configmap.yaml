@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smtp-configmap
+data:
+  smtp-host: smtp.gmail.com
+  smtp-port: "587"
